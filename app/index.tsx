@@ -24,7 +24,7 @@ export default function HomeScreen() {
         onPress={() => navigation.navigate("profile")}
       >
         <View style={styles.profileCircle}>
-          <MaterialCommunityIcons name="account-outline" size={35} color="#292D32" />
+          <MaterialCommunityIcons name="account-outline" size={40} color="#292D32" />
         </View>
       </TouchableOpacity>
 
@@ -64,12 +64,12 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     position: "absolute",
-    top: 50,
-    left: 20,
+    top: 70,
+    left: 35,
   },
   profileCircle: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 40, // Makes it a circle
     borderWidth: 2,
     borderColor: "#E2E8F0", // Light gray border
@@ -99,3 +99,4 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
 });
+
