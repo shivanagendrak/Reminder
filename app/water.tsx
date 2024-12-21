@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-na
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons, SimpleLineIcons, Feather, EvilIcons } from '@expo/vector-icons';
 import { useNavigation } from "expo-router";
+import {useTheme} from "../ThemeProvider";
 
 const WaterScreen: React.FC = () => {
   const navigation = useNavigation();
