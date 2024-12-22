@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
     left: 35,
   },
   profileCircle: {
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     borderRadius: 40, // Makes it a circle
     borderWidth: 5,
     justifyContent: "center",
