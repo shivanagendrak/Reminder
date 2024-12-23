@@ -135,10 +135,10 @@ export default function Index() {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.headingContainer}>
-        <Text style={[styles.headingStatic, { fontFamily: 'Figtree', color: theme.text }]}>
+        {/* <Text style={[styles.headingStatic, { fontFamily: 'Figtree', color: theme.text }]}>
           Welcome to{' '}
-        </Text>
-        {Array.from('Reminder').map((letter, index) => (
+        </Text> */}
+        {/* {Array.from('Reminder').map((letter, index) => (
           <Animated.Text
             key={index}
             style={[
@@ -155,7 +155,7 @@ export default function Index() {
           >
             {letter}
           </Animated.Text>
-        ))}
+        ))} */}
       </View>
       <View style={styles.iconsContainer}>
         {icons.map((icon, index) => (
