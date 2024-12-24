@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useRouter } from 'expo-router';
 import { useTheme } from '../ThemeProvider'; // Import ThemeProvider hook
 
+
+
 export default function Index() {
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: '554820962895-kid09j0fcjq2gemg0pk21os1scsbkdva.apps.googleusercontent.com',
