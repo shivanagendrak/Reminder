@@ -240,8 +240,8 @@ export default function Profile() {
       How We Use Your Information
     </Text>
     <Text style={[styles.sheetText, { color: theme.text }]}>
-      - To authenticate your identity and provide access to the App.
-      - To ensure the security and functionality of the App.
+      To authenticate your identity and provide access to the App.
+      To ensure the security and functionality of the App.
     </Text>
 
     <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
@@ -249,8 +249,8 @@ export default function Profile() {
     </Text>
     <Text style={[styles.sheetText, { color: theme.text }]}>
       We do not sell your personal information. However, we may share your authentication data with:
-      - Google Services: To facilitate authentication and access.
-      - Legal Compliance: Authorities or other entities when required by law, or to protect our rights and users.
+      Google Services: To facilitate authentication and access.
+      Legal Compliance: Authorities or other entities when required by law, or to protect our rights and users.
     </Text>
 
     <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
@@ -316,6 +316,10 @@ export default function Profile() {
 
         </BottomSheet>
       ))}
+      <View style={styles.versionContainer}>
+  <Text style={styles.versionText}>Version: v1.0</Text>
+</View>
+
     </GestureHandlerRootView>
   );
 }
@@ -473,6 +477,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  versionContainer: {
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
+  },
+  
+  versionText: {
+    fontSize: 12,
+    color: "#888", // Subtle color for the version text
+    textAlign: "center",
+  },
+  
   
 
 });
