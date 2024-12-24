@@ -8,7 +8,7 @@ const lightTheme = {
   googleButton: "#E2E8F0",
   googleButtonText: "#000000",
   buttonBorder: "#E0E0E0",
-  buttonBackground: "#F5F5F5", // Light gray button background
+  buttonBackground: "#FFFFFF", // Light gray button background
   buttonText: "#4285F4", // Google blue for text/icons
   border: "#E0E0E0", // Light gray border
   shadowColor: "#000000", // Shadow color

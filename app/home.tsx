@@ -104,7 +104,7 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/water", waterScaleAnim)}
           >
-            <Ionicons name="water-outline" size={35} color="#0B82FF" />
+            <Ionicons name="water-outline" size={40} color="#0B82FF" />
           </TouchableOpacity>
         </Animated.View>
 
@@ -117,7 +117,7 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/medication", medicationScaleAnim)}
           >
-            <MaterialCommunityIcons name="pill" size={35} color="#FF212D" />
+            <MaterialCommunityIcons name="pill" size={40} color="#FF212D" />
           </TouchableOpacity>
         </Animated.View>
 
@@ -130,7 +130,7 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/food", foodScaleAnim)}
           >
-            <MaterialCommunityIcons name="hamburger" size={35} color="#FF9613" />
+            <MaterialCommunityIcons name="hamburger" size={40} color="#FF9613" />
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 40, // Makes it a circle
-    borderWidth: 5,
+    borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
