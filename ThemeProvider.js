@@ -9,7 +9,7 @@ const lightTheme = {
   googleButtonText: "#000000",
   buttonBorder: "#E0E0E0",
   buttonBackground: "#FFFFFF", // Light gray button background
-  buttonText: "#4285F4", // Google blue for text/icons
+  buttonText: "#000000", // Google blue for text/icons
   border: "#E0E0E0", // Light gray border
   shadowColor: "#000000", // Shadow color
   buttonTextColor: "#000000", // Text color for buttons
@@ -17,14 +17,14 @@ const lightTheme = {
 
 const darkTheme = {
   mode: "dark", // Added mode property
-  background: "#121212",
+  background: "#0E0F0E",
   text: "#FFFFFF",
-  googleButton: "#333333",
+  googleButton: "#0E0F0E",
   googleButtonText: "#FFFFFF",
   buttonBorder: "#FFFFFF",
-  buttonBackground: "#333333", // Dark gray button background
-  buttonText: "#8AB4F8", // Lighter blue for text/icons
-  border: "#444444", // Light gray border
+  buttonBackground: "#0E0F0E", // Dark gray button background
+  buttonText: "#FFFFFF", // Lighter blue for text/icons
+  border: "#FFFFFF", // Light gray border
   shadowColor: "#FFFFFF", // White shadow for dark mode
   buttonTextColor: "#FFFFFF", // White button text
 };

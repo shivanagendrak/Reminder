@@ -8,6 +8,7 @@ import { useFonts, Figtree_400Regular } from "@expo-google-fonts/figtree";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
+
 export default function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [name, setName] = useState("User");
@@ -25,9 +26,19 @@ export default function Profile() {
 
   const snapPoints = useMemo(() => ["50%", "80%"], []);
 
-  const openSheet = useCallback((type) => {
-    sheetRefs[type].current?.snapToIndex(1);
-  }, []);
+  const openSheet = useCallback(
+    (type) => {
+      // Close all sheets first
+      Object.keys(sheetRefs).forEach((key) => {
+        sheetRefs[key].current?.snapToIndex(-1); 
+        sheetRefs[key].current?.close(); // Close each sheet
+      });
+  
+      // Open the desired sheet
+      sheetRefs[type].current?.snapToIndex(1);
+    },
+    [sheetRefs]
+  );
 
   const handleSheetChange = useCallback((index) => {
     console.log("Bottom Sheet index:", index);
@@ -109,7 +120,7 @@ export default function Profile() {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.googleButton, { backgroundColor: theme.buttonBackground }]}
+          style={[styles.googleButton, { backgroundColor: theme.buttonBackground , borderColor: theme.buttonBorder}]}
           onPress={() => openSheet("sound")}
         >
           <Text style={[styles.googleButtonText, { color: theme.text }]}>Sounds</Text>
@@ -117,14 +128,14 @@ export default function Profile() {
           <MaterialIcons name="music-note" size={30} color={theme.text} style={styles.buttonIcon}/>
         </TouchableOpacity>
 
-        <View style={[styles.toggleContainer, { backgroundColor: theme.buttonBackground }]}>
+        <View style={[styles.toggleContainer, { backgroundColor: theme.buttonBackground, borderColor: theme.buttonBorder }]}>
           <Text style={[styles.toggleLabel, { color: theme.text }]}>Snooze</Text>
           <MaterialIcons name="snooze" size={30} color={theme.text} style={styles.buttonIcon}/>
           <TouchableOpacity
             style={[
               styles.toggleSwitch,
               {
-                backgroundColor: isSnoozeEnabled ? "green" : theme.buttonBackground,
+                backgroundColor: isSnoozeEnabled ? "green" : theme.buttonBackground, 
               },
             ]}
             onPress={handleToggleSnooze}
@@ -139,7 +150,7 @@ export default function Profile() {
         </View>
 
         <TouchableOpacity
-          style={[styles.googleButton, { backgroundColor: theme.buttonBackground }]}
+          style={[styles.googleButton, { backgroundColor: theme.buttonBackground,borderColor: theme.buttonBorder }]}
           onPress={() => openSheet("privacy")}
         >
           <Text style={[styles.googleButtonText, { color: theme.text }]}>Privacy Policy</Text>
@@ -148,7 +159,7 @@ export default function Profile() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.googleButton, { backgroundColor: theme.buttonBackground }]}
+          style={[styles.googleButton, { backgroundColor: theme.buttonBackground , borderColor: theme.buttonBorder}]}
           onPress={() => openSheet("developers")}
         >
           <Text style={[styles.googleButtonText, { color: theme.text }]}>Developers</Text>
@@ -158,8 +169,14 @@ export default function Profile() {
       </View>
 
       <View style={styles.buttonWrapper}>
-        <Button title="Sign Out" color={theme.buttonTextColor} onPress={handleSignOut} />
-      </View>
+  <Button 
+    title="Sign Out" 
+    color="#FF6B6B" 
+    onPress={handleSignOut} 
+  />
+</View>
+
+
 
       {["sound", "privacy", "developers"].map((type) => (
         <BottomSheet
@@ -184,25 +201,119 @@ export default function Profile() {
             backgroundColor: theme.text,
           }}
         >
-          <BottomSheetScrollView
-            contentContainerStyle={[
-              styles.contentContainer,
-              { backgroundColor: theme.background },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sheetContent,
-                { color: theme.text },
-              ]}
-            >
-              {type === "sound"
-                ? "Sound Settings"
-                : type === "privacy"
-                ? "Privacy Policy Details"
-                : "Developers Info"}
+      <BottomSheetScrollView
+        contentContainerStyle={[
+          styles.contentContainer,
+          { backgroundColor: theme.background },
+        ]}
+      >
+        {type === "sound" && (
+          <View style={styles.sheetSection}>
+            <Text style={[styles.sheetTitle, { color: theme.text }]}>Sounds Settings</Text>
+            <Text style={[styles.sheetText, { color: theme.text }]}>
+              Customize your notification and alert sounds.
             </Text>
-          </BottomSheetScrollView>
+          </View>
+        )}
+{type === "privacy" && (
+  <View style={styles.sheetSection}>
+    <Text style={[styles.sheetTitle, { color: theme.text }]}>Privacy Policy</Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Effective Date: December 24, 2024
+    </Text>
+
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Your Privacy Matters
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Reminder (“we,” “our,” or “us”) values your privacy. This Privacy Policy outlines how we collect, use, and protect your information when you use our mobile application (“the App”).
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Information We Collect
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Authentication Data: We use Google Sign-In for authentication purposes. No other personal information or data is collected by the App.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      How We Use Your Information
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      - To authenticate your identity and provide access to the App.
+      - To ensure the security and functionality of the App.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Sharing Your Information
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      We do not sell your personal information. However, we may share your authentication data with:
+      - Google Services: To facilitate authentication and access.
+      - Legal Compliance: Authorities or other entities when required by law, or to protect our rights and users.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Data Security
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      We implement industry-standard measures to protect your authentication data from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet or electronic storage is entirely secure.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Your Choices
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Revoke Permissions: You can revoke Google Sign-In permissions through your Google account settings.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Third-Party Services
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      The App relies on Google Sign-In for authentication. Please review Google’s privacy policy for more details on their data handling practices.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Children’s Privacy
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Our App is not intended for individuals under the age of 13. We do not knowingly collect personal information from children. If we become aware of such data, we will delete it promptly.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Changes to This Policy
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      We may update this Privacy Policy from time to time. Changes will be posted within the App, and the “Effective Date” at the top will be updated. Continued use of the App signifies your acceptance of the updated terms.
+    </Text>
+
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+      Contact Us
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      If you have questions or concerns about this Privacy Policy, please contact us at:
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      shivaaman751@gmail.com
+    </Text>
+    <Text style={[styles.sheetText, { color: theme.text }]}>
+      Reminder, Austin, Texas
+    </Text>
+  </View>
+)}
+
+        {type === "developers" && (
+          <View style={styles.sheetSection}>
+            <Text style={[styles.sheetTitle, { color: theme.text }]}>Developers</Text>
+            <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+              This app was developed by: </Text>
+    <Text style={[styles.sheetSubTitle, { color: theme.text }]}>
+               Shiva Nagendra Babu Kore  & Sandeep Gantasala</Text>
+          </View>
+        )}
+      </BottomSheetScrollView>
+
         </BottomSheet>
       ))}
     </GestureHandlerRootView>
@@ -233,7 +344,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 40,
-    borderWidth: 5,
+    borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -265,7 +376,7 @@ const styles = StyleSheet.create({
     height: 68,
     padding: 16,
     borderRadius: 60,
-    borderWidth: 2,
+    borderWidth: 1,
     marginVertical: 11,
     paddingHorizontal: 16,
   },
@@ -289,6 +400,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 8,
     overflow: "hidden",
+    backgroundColor: "transparent",
   },
 
   toggleContainer: {
@@ -299,7 +411,7 @@ const styles = StyleSheet.create({
     height: 68,
     padding: 16,
     borderRadius: 60,
-    borderWidth: 2,
+    borderWidth: 1,
     marginVertical: 10,
     position: "relative",
   },
@@ -333,10 +445,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 90,
     overflow: "visible",
-    shadowColor: "#000000",
-    shadowOffset: { width: 10, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 13,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
     elevation: 15,
     backgroundColor: "transparent",
   },
@@ -352,5 +463,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 20,
   },
+  sheetSubTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  sheetTitle: {
+    fontSize: 26,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  
 
 });

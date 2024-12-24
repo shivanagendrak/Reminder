@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     marginVertical: 14,
     borderRadius: 60,
-    borderWidth: 2,
+    borderWidth: 1,
     
   },
   icon: {
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "400",
     flex: 1, // Allow the text to take remaining space
     textAlign: "center", // Center align text

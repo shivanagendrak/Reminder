@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   googleButtonText: {
-    fontSize: 19,
+    fontSize: 21,
     fontWeight: '400',
   },
 });
