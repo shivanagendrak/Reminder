@@ -229,13 +229,13 @@ const styles = StyleSheet.create({
     width: 280,
     height: 56,
     borderRadius: 28,
-    borderWidth: 2,
+    borderWidth: 1,
   },
   googleIcon: {
     marginRight: 10,
   },
   googleButtonText: {
-    fontSize: 17.5,
+    fontSize: 19,
     fontWeight: '400',
   },
 });

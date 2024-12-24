@@ -21,7 +21,7 @@ const darkTheme = {
   text: "#FFFFFF",
   googleButton: "#333333",
   googleButtonText: "#FFFFFF",
-  buttonBorder: "#444444",
+  buttonBorder: "#FFFFFF",
   buttonBackground: "#333333", // Dark gray button background
   buttonText: "#8AB4F8", // Lighter blue for text/icons
   border: "#444444", // Light gray border
