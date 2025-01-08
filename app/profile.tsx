@@ -7,7 +7,7 @@ import { useRouter } from "expo-router"; // Import router for navigation
 import { useFonts, Figtree_400Regular } from "@expo-google-fonts/figtree";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
@@ -329,26 +329,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
+    padding: wp(3),
   },
 
   profileRow: {
     flexDirection: "row",
     alignItems: "center",
     position: "absolute",
-    top: 70,
-    left: 35,
+    top: hp(8),
+    left: wp(8),
+    
   },
 
   profileContainer: {
-    marginRight: 10,
+    marginRight: wp(5.5),
+    
   },
 
   profileCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 40,
-    borderWidth: 2,
+    width: wp(16),
+    height: wp(16),
+    borderRadius: wp(15),
+    borderWidth: wp(.3),
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -361,15 +363,16 @@ const styles = StyleSheet.create({
   },
 
   userName: {
-    fontSize: 35,
+    fontSize: wp(7),
     fontWeight: "800",
     fontFamily: "Figtree_400Regular",
   },
 
   buttonContainer: {
-    marginTop: 40,
+    marginTop: wp(0),
     alignItems: "center",
     width: "100%",
+    
   },
 
   googleButton: {

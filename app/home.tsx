@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Image } from "react-native";
+import { View,SafeAreaView, Text, TouchableOpacity, StyleSheet, Animated, Image,Dimensions } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFonts, Figtree_400Regular } from "@expo-google-fonts/figtree";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../ThemeProvider"; // Import ThemeProvider hook
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 export default function Home() {
   const router = useRouter();
@@ -13,6 +15,7 @@ export default function Home() {
   const waterScaleAnim = useRef(new Animated.Value(1)).current;
   const medicationScaleAnim = useRef(new Animated.Value(1)).current;
   const foodScaleAnim = useRef(new Animated.Value(1)).current;
+  const { width, height } = Dimensions.get("window"); // Get screen dimensions
 
   const [profilePicture, setProfilePicture] = useState(null);
 
@@ -64,7 +67,8 @@ export default function Home() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Profile Circle at Top-Left */}
       <TouchableOpacity
         style={styles.profileContainer}
@@ -104,7 +108,7 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/water", waterScaleAnim)}
           >
-            <Ionicons name="water-outline" size={40} color="#0B82FF" />
+            <Ionicons name="water-outline" size={wp(10)} color="#0B82FF" />
           </TouchableOpacity>
         </Animated.View>
 
@@ -117,7 +121,7 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/medication", medicationScaleAnim)}
           >
-            <MaterialCommunityIcons name="pill" size={40} color="#FF212D" />
+            <MaterialCommunityIcons name="pill" size={wp(10)} color="#FF212D" />
           </TouchableOpacity>
         </Animated.View>
 
@@ -130,11 +134,11 @@ export default function Home() {
             ]}
             onPress={() => handlePress("/food", foodScaleAnim)}
           >
-            <MaterialCommunityIcons name="hamburger" size={40} color="#FF9613" />
+            <MaterialCommunityIcons name="hamburger" size={wp(10)} color="#FF9613" />
           </TouchableOpacity>
         </Animated.View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -146,12 +150,12 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     position: "absolute",
-    top: 70,
-    left: 35,
+    top: hp(8),
+    left: wp(8),
   },
   profileCircle: {
-    width: 70,
-    height: 70,
+    width: wp(15),
+    height: wp(15),
     borderRadius: 40, // Makes it a circle
     borderWidth: 2,
     justifyContent: "center",
@@ -164,21 +168,22 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   title: {
-    fontSize: 25,
+    fontSize: wp(6),
     fontFamily: "Figtree",
     fontWeight: "400",
-    marginBottom: 50, // Space between text and buttons
+    marginBottom: wp(10), // Space between text and buttons
   },
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%", // Adjust spacing of icons
+    
   },
   circleButton: {
-    width: 65,
-    height: 65,
-    borderRadius: 200,
-    borderWidth: 2,
+    width: wp(16),
+    height: wp(16),
+    borderRadius: wp(10),
+    borderWidth: wp(.4),
     justifyContent: "center",
     alignItems: "center",
   },
