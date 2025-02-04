@@ -51,7 +51,7 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
-    "expo-notifications": "~0.29.12",
+    "expo-notifications": "~0.29.13",
     "expo-dev-client": "~5.0.10"
   },
   "devDependencies": {
