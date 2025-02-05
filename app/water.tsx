@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     padding: hp(1.3),
     backgroundColor: '#007AFF',
     borderRadius: wp(10),
-    marginTop: hp(0.5),
+    marginTop: hp(5.5),
     alignItems: 'center',
     justifyContent: 'center',
     width: wp(40),
