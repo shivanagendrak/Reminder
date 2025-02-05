@@ -18,6 +18,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WaterScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -27,10 +28,13 @@ const WaterScreen: React.FC = () => {
   const [openPicker, setOpenPicker] = useState<'start' | 'end' | null>(null);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  // Set everyTime to a default value. Now supporting "1 minute", "10 minutes", "30 minutes", "1 hour", "2 hours"
+  // Default interval (supports "1 minute", "10 minutes", "30 minutes", "1 hour", "2 hours")
   const [everyTime, setEveryTime] = useState('10 minutes');
   const [showModal, setShowModal] = useState(false);
   const [showEveryModal, setShowEveryModal] = useState(false);
+
+  // Store the scheduled water reminder range as a string (e.g. "6 : 00 AM - 10 : 00 PM")
+  const [waterReminderRange, setWaterReminderRange] = useState<string | null>(null);
 
   // Request notification permissions on mount
   useEffect(() => {
@@ -43,6 +47,21 @@ const WaterScreen: React.FC = () => {
       }
     };
     requestPermissions();
+  }, []);
+
+  // Load stored water reminder range from AsyncStorage on mount
+  useEffect(() => {
+    const loadReminderRange = async () => {
+      try {
+        const storedRange = await AsyncStorage.getItem('waterReminderRange');
+        if (storedRange !== null) {
+          setWaterReminderRange(storedRange);
+        }
+      } catch (error) {
+        console.error('Error loading water reminder range:', error);
+      }
+    };
+    loadReminderRange();
   }, []);
 
   // Listen for notification responses (e.g., snooze action)
@@ -97,14 +116,24 @@ const WaterScreen: React.FC = () => {
     await Notifications.cancelAllScheduledNotificationsAsync();
 
     const now = new Date();
-    // If the chosen startTime is in the past, use "now" as the first trigger
-    const scheduledStartTime = startTime > now ? startTime : now;
-    if (endTime <= now) {
-      Alert.alert('Invalid End Time', 'End time must be in the future.');
-      return;
+
+    // Compute scheduled start time based on the selected time-of-day.
+    let scheduledStartTime = new Date(now);
+    scheduledStartTime.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
+    // If the selected start time is earlier than the current time, schedule for tomorrow.
+    if (scheduledStartTime <= now) {
+      scheduledStartTime.setDate(scheduledStartTime.getDate() + 1);
     }
 
-    // Convert "everyTime" string into milliseconds; now supports "10 minutes"
+    // Compute scheduled end time similarly.
+    let scheduledEndTime = new Date(now);
+    scheduledEndTime.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+    // If the end time is not after the start time, assume the end time is on the next day.
+    if (scheduledEndTime <= scheduledStartTime) {
+      scheduledEndTime.setDate(scheduledEndTime.getDate() + 1);
+    }
+
+    // Convert the "everyTime" string into milliseconds
     const interval =
       everyTime === '1 minute'
         ? 1 * 60 * 1000
@@ -119,38 +148,61 @@ const WaterScreen: React.FC = () => {
         : 1 * 60 * 1000;
 
     let currentTime = new Date(scheduledStartTime);
-    const endTimeDate = new Date(endTime);
     let count = 0;
-
-    while (currentTime <= endTimeDate) {
+    // Schedule notifications until the computed end time (or up to iOS limit)
+    while (currentTime <= scheduledEndTime) {
       count += 1;
       if (count > 63) {
         console.warn('iOS supports a maximum of 64 scheduled notifications. Stopping early.');
         break;
       }
       try {
-        const id = await Notifications.scheduleNotificationAsync({
+        await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to Drink Water! 💧',
             body: 'Stay hydrated and drink a glass of water.',
             sound: true,
             data: { type: 'water-reminder' },
           },
-          // Using a Date object as the trigger schedules a one-off notification at that time.
           trigger: currentTime,
         });
-        console.log(`Scheduled notification #${count} for:`, currentTime, 'ID:', id);
+        console.log(`Scheduled notification #${count} for:`, currentTime);
       } catch (error) {
         console.error('Error scheduling notification:', error);
       }
       currentTime = new Date(currentTime.getTime() + interval);
     }
 
+    // Create a string representing the time range (e.g. "6 : 00 AM - 10 : 00 PM")
+    const formattedStart = formatCustomTime(scheduledStartTime);
+    const formattedEnd = formatCustomTime(scheduledEndTime);
+    const range = `${formattedStart.timeString} ${formattedStart.period} - ${formattedEnd.timeString} ${formattedEnd.period}`;
+
+    // Save the time range to AsyncStorage and update state
+    try {
+      await AsyncStorage.setItem('waterReminderRange', range);
+      setWaterReminderRange(range);
+    } catch (error) {
+      console.error('Error saving water reminder range:', error);
+    }
+
     Alert.alert(
       'Notifications Scheduled',
-      `Scheduled ${count} notifications from ${formatCustomTime(scheduledStartTime).timeString}${formatCustomTime(scheduledStartTime).period} to ${formatCustomTime(endTimeDate).timeString}${formatCustomTime(endTimeDate).period}, every ${everyTime}.`
+      `Scheduled ${count} notifications from ${range}, every ${everyTime}.`
     );
     console.log(`Total notifications scheduled: ${count}`);
+  };
+
+  // Delete the scheduled water reminder (cancel notifications and clear stored range)
+  const handleDeleteReminder = async () => {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    try {
+      await AsyncStorage.removeItem('waterReminderRange');
+      setWaterReminderRange(null);
+      Alert.alert('Reminder Deleted', 'Scheduled water reminder has been deleted.');
+    } catch (error) {
+      console.error('Error deleting water reminder range:', error);
+    }
   };
 
   const handleDone = () => {
@@ -174,10 +226,9 @@ const WaterScreen: React.FC = () => {
         <TouchableOpacity
           onPress={async () => {
             await Notifications.cancelAllScheduledNotificationsAsync();
-            Alert.alert(
-              'Notifications Canceled',
-              'All scheduled water reminders have been canceled.'
-            );
+            await AsyncStorage.removeItem('waterReminderRange');
+            setWaterReminderRange(null);
+            Alert.alert('Notifications Canceled', 'Scheduled water reminder has been canceled.');
           }}
         >
           <EvilIcons name="trash" size={wp(8)} color="red" />
@@ -234,10 +285,7 @@ const WaterScreen: React.FC = () => {
             <Ionicons name="alarm-outline" size={wp(7)} color="orange" />
             <Text style={styles.label}>Every</Text>
           </View>
-          <TouchableOpacity
-            style={styles.timeTextContainer}
-            onPress={() => setShowEveryModal(true)}
-          >
+          <TouchableOpacity style={styles.timeTextContainer} onPress={() => setShowEveryModal(true)}>
             <Text style={styles.timeValue}>{everyTime}</Text>
           </TouchableOpacity>
         </View>
@@ -308,6 +356,19 @@ const WaterScreen: React.FC = () => {
           <Text style={styles.addButtonText}>Add</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Bottom Section: Render only when a water reminder range exists */}
+      {waterReminderRange && (
+        <View style={styles.reminderContainer}>
+          <View style={styles.reminderRow}>
+            <Ionicons name="water-outline" size={24} color="#4a90e2" style={styles.leftIcon} />
+            <Text style={styles.reminderText}>{waterReminderRange}</Text>
+            <TouchableOpacity onPress={handleDeleteReminder}>
+              <Ionicons name="trash-outline" size={24} color="red" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -400,6 +461,22 @@ const styles = StyleSheet.create({
   },
   addButtonText: { color: '#fff', fontSize: wp(6), fontWeight: '500' },
   picker: { width: wp(70), height: hp(20), backgroundColor: '#fff' },
+  reminderContainer: {
+    marginTop: hp(3),
+    paddingHorizontal: wp(5),
+    paddingVertical: hp(2),
+    borderWidth: 1,
+    borderColor: '#B2B2B2',
+    borderRadius: 35,
+    marginHorizontal: wp(5),
+  },
+  reminderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftIcon: { marginRight: wp(3) },
+  reminderText: { fontSize: wp(4.5), color: '#333', flex: 1 },
 });
 
 export default WaterScreen;
