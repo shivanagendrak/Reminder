@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // Center align items vertically
     justifyContent: "space-between", // Add spacing between icon and text
     width: "80%",
-    height: 68,
+    height: 65,
     padding: 16,
     paddingVertical: 16,
     paddingHorizontal: 30,
