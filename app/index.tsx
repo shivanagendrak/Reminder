@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
 import * as Google from 'expo-auth-session/providers/google';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
@@ -7,8 +7,6 @@ import { Figtree_400Regular } from '@expo-google-fonts/figtree';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useRouter } from 'expo-router';
 import { useTheme } from '../ThemeProvider'; // Import ThemeProvider hook
-
-
 
 export default function Index() {
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -174,7 +172,11 @@ export default function Index() {
           ]}
           onPress={animateGoogleButton}
         >
-          <Ionicons name="logo-google" size={25} color="#4285F4" style={styles.googleIcon} />
+          <Image
+            source={require('../assets/images/google.png')}
+            style={styles.googleIcon}
+            resizeMode="contain"
+          />
           <Text
             style={[
               styles.googleButtonText,
@@ -232,10 +234,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   googleIcon: {
+    width: 25,
+    height: 25,
     marginRight: 10,
   },
   googleButtonText: {
-    fontSize: 21,
+    fontSize: 19,
     fontWeight: '400',
   },
 });

@@ -5,7 +5,7 @@ const lightTheme = {
   mode: "light", // Added mode property
   background: "#FFFFFF",
   text: "#000000",
-  googleButton: "#E2E8F0",
+  googleButton: "#FFFFFF",
   googleButtonText: "#000000",
   buttonBorder: "#E0E0E0",
   buttonBackground: "#FFFFFF", // Light gray button background
