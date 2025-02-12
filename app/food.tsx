@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Modal,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Notifications from 'expo-notifications';
-import { Ionicons, Feather, EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  Feather,
+  EvilIcons,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useFonts, Figtree_400Regular } from '@expo-google-fonts/figtree';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+// Import the Theme hook
+import { useTheme } from '../ThemeProvider';
 
 // Set notification handler
 Notifications.setNotificationHandler({
@@ -20,8 +38,8 @@ Notifications.setNotificationHandler({
 
 const FoodScreen: React.FC = () => {
   const navigation = useNavigation();
+  const theme = useTheme(); // <- get current theme
 
-  // Request notification permissions on mount.
   useEffect(() => {
     (async () => {
       const { status } = await Notifications.requestPermissionsAsync();
@@ -30,7 +48,6 @@ const FoodScreen: React.FC = () => {
       }
     })();
 
-    // Fetch saved meal times on mount
     const fetchMealTimes = async () => {
       try {
         const savedData = await AsyncStorage.getItem('mealTimes');
@@ -135,22 +152,45 @@ const FoodScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.safeContainer, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={wp(7)} color="#4a90e2" />
+          <Feather name="arrow-left" size={wp(7)} color={theme.text} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleClearTimes}>
           <EvilIcons name="trash" size={wp(8)} color="red" />
         </TouchableOpacity>
       </View>
+
       <View style={styles.watercontainer}>
-        <MaterialCommunityIcons name="hamburger" size={wp(15)} color="#FF9613" />
-        <Text style={styles.title}>Food</Text>
+        <MaterialCommunityIcons
+          name="hamburger"
+          size={wp(15)}
+          color="#FF9613"
+        />
+        <Text style={[styles.title, { color: theme.text }]}>Food</Text>
       </View>
+
+      {/* Meal Time Dropdown */}
       <View style={styles.mealDropdownContainer}>
         <Dropdown
-          style={styles.dropdownContainer}
+          style={[
+            styles.dropdownContainer,
+            {
+              backgroundColor: theme.buttonBackground,
+              borderColor: theme.border,
+            },
+          ]}
+          /* The container for the opened list */
+          containerStyle={[
+            styles.dropdownOpenedContainer,
+            {
+              backgroundColor: theme.background,
+            },
+          ]}
+          placeholderStyle={{ color: theme.text }}
+          selectedTextStyle={{ color: theme.text }}
+          itemTextStyle={{ color: theme.text }}
           data={[
             { label: 'Pre-Breakfast', value: 'Pre-Breakfast' },
             { label: 'Breakfast', value: 'Breakfast' },
@@ -169,19 +209,42 @@ const FoodScreen: React.FC = () => {
           value={mealTimeDropdownValue}
           onChange={(item) => setMealTimeDropdownValue(item.value)}
           renderLeftIcon={() => (
-            <Ionicons name="calendar-outline" size={25} color="black" style={styles.leftIcon} />
+            <Ionicons
+              name="calendar-outline"
+              size={25}
+              color={theme.text}
+              style={styles.leftIcon}
+            />
           )}
         />
       </View>
+
+      {/* Time Selector */}
       <View style={styles.mealDropdownContainer}>
-        <TouchableOpacity style={styles.dropdownContainer} onPress={() => setShowTimePicker(true)}>
-          <Ionicons name="time-outline" size={25} color="black" style={styles.leftIcon} />
-          <Text style={styles.timeButtonText}>Time</Text>
+        <TouchableOpacity
+          style={[
+            styles.dropdownContainer,
+            {
+              backgroundColor: theme.buttonBackground,
+              borderColor: theme.border,
+            },
+          ]}
+          onPress={() => setShowTimePicker(true)}
+        >
+          <Ionicons
+            name="time-outline"
+            size={25}
+            color={theme.text}
+            style={styles.leftIcon}
+          />
+          <Text style={{ color: theme.text }}>Time</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Time Picker Modal */}
       <Modal visible={showTimePicker} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { backgroundColor: theme.background }]}>
             <DateTimePicker
               value={tempTime}
               mode="time"
@@ -189,24 +252,50 @@ const FoodScreen: React.FC = () => {
               onChange={onChangeTime}
               style={{ width: '100%' }}
             />
-            <TouchableOpacity style={styles.doneButton} onPress={handleDoneTimePicker}>
+            <TouchableOpacity
+              style={[styles.doneButton, { backgroundColor: '#0B82FF' }]}
+              onPress={handleDoneTimePicker}
+            >
               <Text style={styles.doneButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
+      {/* Add Time Button */}
       <View style={styles.addButtonContainer}>
-        <TouchableOpacity style={styles.saveTimeButton} onPress={handleAddTime}>
+        <TouchableOpacity
+          style={[styles.saveTimeButton, { backgroundColor: '#0B82FF' }]}
+          onPress={handleAddTime}
+        >
           <Ionicons name="add-circle-outline" size={24} color="#fff" style={styles.addIcon} />
           <Text style={styles.saveTimeButtonText}>Add</Text>
         </TouchableOpacity>
       </View>
+
+      {/* List of Times */}
       <View style={styles.timeList}>
         {timeList.map((item, index) => (
-          <View key={index} style={styles.timeListItem}>
-            <MaterialCommunityIcons name="hamburger" size={24} color="#FF9613" />
-            <Text style={styles.timeListText}>{item.label}</Text>
-            <Text style={styles.timeListText}>{item.time}</Text>
+          <View
+            key={index}
+            style={[
+              styles.timeListItem,
+              {
+                borderColor: theme.border,
+              },
+            ]}
+          >
+            <MaterialCommunityIcons
+              name="hamburger"
+              size={24}
+              color="#FF9613"
+            />
+            <Text style={[styles.timeListText, { color: theme.text }]}>
+              {item.label}
+            </Text>
+            <Text style={[styles.timeListText, { color: theme.text }]}>
+              {item.time}
+            </Text>
             <TouchableOpacity onPress={() => handleRemoveTime(index)}>
               <Ionicons name="trash-outline" size={24} color="red" />
             </TouchableOpacity>
@@ -218,7 +307,9 @@ const FoodScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  safeContainer: { flex: 1, backgroundColor: '#fff' },
+  safeContainer: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -252,7 +343,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#B2B2B2",
+  },
+  // Add a style for the opened dropdown if needed
+  dropdownOpenedContainer: {
+    // the container background of the list
+    padding: 5,
+    borderRadius: 8,
   },
   leftIcon: {
     marginRight: 8,
@@ -263,14 +359,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   modalContent: {
-    backgroundColor: '#fff',
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   doneButton: {
     alignSelf: 'center',
-    backgroundColor: "#0B82FF",
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 20,
@@ -280,33 +374,42 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  addButtonContainer: { alignItems: 'center', marginVertical: 20 },
+  addButtonContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
   saveTimeButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: "#0B82FF",
     padding: 15,
     borderRadius: 25,
-    width: "40%",
+    width: '40%',
     justifyContent: 'center',
   },
   addIcon: {
     marginRight: 8,
   },
-  saveTimeButtonText: { fontSize: 18, color: "#fff" },
-  timeList: { width: "100%", marginTop: 70 },
+  saveTimeButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  timeList: {
+    width: '100%',
+    marginTop: 70,
+  },
   timeListItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: "#B2B2B2",
     borderRadius: 35,
     padding: 20,
     marginVertical: 10,
     marginHorizontal: 20,
   },
-  timeListText: { fontSize: 16, color: "#333" },
+  timeListText: {
+    fontSize: 16,
+  },
 });
 
 export default FoodScreen;
