@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Reminder",
-    "slug": "Reminder",
+    "name": "Trivital",
+    "slug": "Trivital",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shivanagendrak.Reminder"
+      "bundleIdentifier": "com.shivanagendrak.Trivital"
       
     },
     "android": {
@@ -18,7 +18,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shivanagendrak.Reminder"
+      "package": "com.shivanagendrak.Trivital"
     },
     "web": {
       "bundler": "metro",

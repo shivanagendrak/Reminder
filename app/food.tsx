@@ -189,7 +189,13 @@ const FoodScreen: React.FC = () => {
             },
           ]}
           placeholderStyle={{ color: theme.text }}
-          selectedTextStyle={{ color: theme.text }}
+          selectedTextStyle={{
+            color: theme.text,
+            textAlign: 'center',
+            flex: 1,
+            alignSelf: 'center',
+            textAlignVertical: 'center',
+          }}
           itemTextStyle={{ color: theme.text }}
           data={[
             { label: 'Pre-Breakfast', value: 'Pre-Breakfast' },
@@ -237,7 +243,13 @@ const FoodScreen: React.FC = () => {
             color={theme.text}
             style={styles.leftIcon}
           />
-          <Text style={{ color: theme.text }}>Time</Text>
+          <Text style={{ color: theme.text, flex: 1, textAlign: 'center' }}>Time</Text>
+          <Ionicons
+            name="chevron-down-outline"
+            size={25}
+            color={theme.text}
+            style={styles.leftIcon}
+          />
         </TouchableOpacity>
       </View>
 
